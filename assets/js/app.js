@@ -60,12 +60,6 @@
     const id=save.dataset.save;saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];saveSaved();render();
     showToast(saved.includes(id)?(language==="hi"?"रेसिपी इस डिवाइस पर सेव हुई":"Recipe saved on this device"):(language==="hi"?"सेव की गई रेसिपी से हटाया":"Removed from saved recipes"));
   });
-  $("#savedLink").addEventListener("click",e=>{
-    e.preventDefault();const list=recipes.filter(r=>saved.includes(r.id));
-    if(!list.length){showToast(language==="hi"?"अभी कोई रेसिपी सेव नहीं है।":"You haven't saved a recipe yet.");return}
-    resetFilters();grid.innerHTML=list.map(card).join("");empty.hidden=true;grid.hidden=false;
-    $("#recipes").scrollIntoView({behavior:"smooth"});showToast(language==="hi"?"आपकी सेव की गई रेसिपी":"Your saved recipes");
-  });
   $$(".collection-card").forEach(b=>b.addEventListener("click",()=>{
     activeCategory=b.dataset.collection;query="";search.value="";diet.value="all";time.value="0";difficulty.value="all";
     updateCategoryButtons();render();$("#recipes").scrollIntoView({behavior:"smooth"});
