@@ -16,5 +16,6 @@ function render(){
 function setLanguage(next){language=next;document.body.classList.toggle("lang-hi",language==="hi");document.querySelectorAll("[data-en][data-hi]").forEach(el=>el.innerHTML=el.dataset[language]);$("#languageToggle").innerHTML=language==="hi"?"<strong>हि</strong> <span class='toggle-divider'>/</span> EN":"हि <span class='toggle-divider'>/</span> <strong>EN</strong>";$("#languageToggle").setAttribute("aria-label",language==="hi"?"Switch to English":"Switch to Hindi");document.documentElement.lang=language==="hi"?"hi":"en";render()}
 $("#languageToggle").addEventListener("click",()=>setLanguage(language==="en"?"hi":"en"));
 grid.addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(!b)return;const id=b.dataset.remove;writeSaved(readSaved().filter(x=>x!==id));render();note(language==="hi"?"रेसिपी सेव की गई सूची से हटा दी गई":"Recipe removed from saved list")});
+window.addEventListener("storage",e=>{if(e.key==="cookipie-saved-v1")render()});
 $("#year").textContent=new Date().getFullYear();render();
 })();
