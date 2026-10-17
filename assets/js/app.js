@@ -1,15 +1,6 @@
 (() => {
   "use strict";
-  const recipes = [
-    {id:"poha",name:"Kanda Poha",hi:"कांदा पोहा",time:20,kind:"veg",groups:["veg","breakfast","quick"],tags:"poha flattened rice onion peanuts breakfast",image:"https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80",alt:"Indian breakfast bowl"},
-    {id:"paneer",name:"Paneer Butter Masala",hi:"पनीर बटर मसाला",time:35,kind:"veg",groups:["veg","lunch","dinner"],tags:"paneer tomato creamy curry lunch dinner indian",image:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80",alt:"Paneer curry in a bowl"},
-    {id:"masala-dosa",name:"Masala Dosa",hi:"मसाला डोसा",time:30,kind:"veg",groups:["veg","breakfast","snacks","quick"],tags:"dosa potato rice lentil south indian breakfast",image:"https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=800&q=80",alt:"Golden dosa served with chutney"},
-    {id:"chole",name:"Punjabi Chole",hi:"पंजाबी छोले",time:40,kind:"veg",groups:["veg","lunch","dinner"],tags:"chickpea chana curry tomato indian lunch dinner",image:"https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=800&q=80",alt:"Chickpea curry"},
-    {id:"biryani",name:"Chicken Biryani",hi:"चिकन बिरयानी",time:55,kind:"nonveg",groups:["nonveg","lunch","dinner"],tags:"chicken rice biryani spices non vegetarian",image:"https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=800&q=80",alt:"Aromatic chicken biryani with herbs"},
-    {id:"pakora",name:"Onion Pakora",hi:"प्याज़ के पकौड़े",time:25,kind:"veg",groups:["veg","snacks","quick"],tags:"onion pakoda gram flour tea time snack",image:"https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=800&q=80",alt:"Crispy Indian fritters"},
-    {id:"kheer",name:"Rice Kheer",hi:"चावल की खीर",time:35,kind:"veg",groups:["veg","dessert"],tags:"rice milk dessert sweet cardamom kheer",image:"https://images.unsplash.com/photo-1571167530149-c1105c6a9b77?auto=format&fit=crop&w=800&q=80",alt:"Indian rice pudding dessert"},
-    {id:"aloo-paratha",name:"Aloo Paratha",hi:"आलू पराठा",time:30,kind:"veg",groups:["veg","breakfast","lunch"],tags:"potato flatbread paratha breakfast curd",image:"https://images.unsplash.com/photo-1600628422019-6a6b7d8e2e4d?auto=format&fit=crop&w=800&q=80",alt:"Indian flatbread served with accompaniments"}
-  ];
+  const recipes = Object.values(window.COOKIPIE_RECIPES || {});
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const grid=$("#recipeGrid"), search=$("#recipeSearch"), empty=$("#emptyState"), sort=$("#sortRecipes"), toast=$("#toast");
@@ -40,8 +31,7 @@
   $("#languageToggle").addEventListener("click",()=>setLanguage(language==="en"?"hi":"en"));
   grid.addEventListener("click",e=>{
     const save=e.target.closest("[data-save]");
-    if(save){const id=save.dataset.save;saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];saveSaved();render();showToast(saved.includes(id)?(language==="hi"?"रेसिपी इस डिवाइस पर सेव हुई":"Recipe saved on this device"):(language==="hi"?"सेव की गई रेसिपी से हटाया":"Removed from saved recipes"));return}
-    if(e.target.closest("[data-open]"))showToast(language==="hi"?"पूरी रेसिपी के पेज अगले चरण में बनेंगे।":"Full recipe pages are being built next.");
+    if(save){const id=save.dataset.save;saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];saveSaved();render();showToast(saved.includes(id)?(language==="hi"?"रेसिपी इस डिवाइस पर सेव हुई":"Recipe saved on this device"):(language==="hi"?"सेव की गई रेसिपी से हटाया":"Removed from saved recipes"));}
   });
   $("#savedLink").addEventListener("click",e=>{e.preventDefault();const list=recipes.filter(r=>saved.includes(r.id));if(!list.length){showToast(language==="hi"?"अभी कोई रेसिपी सेव नहीं है।":"You haven't saved a recipe yet.");return}query="";activeCategory="all";search.value="";grid.innerHTML=list.map(card).join("");empty.hidden=true;grid.hidden=false;$("#recipes").scrollIntoView({behavior:"smooth"});showToast(language==="hi"?"आपकी सेव की गई रेसिपी":"Your saved recipes")});
   $$(".collection-card").forEach(b=>b.addEventListener("click",()=>{activeCategory=b.dataset.collection;query="";search.value="";$$("[data-category]").forEach(x=>x.classList.toggle("selected",x.dataset.category===activeCategory));render();$("#recipes").scrollIntoView({behavior:"smooth"})}));
