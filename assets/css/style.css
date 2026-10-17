@@ -38,3 +38,17 @@
 .related-grid::-webkit-scrollbar-track{background:#f0eee7;border-radius:8px}
 .related-grid::-webkit-scrollbar-thumb{background:#c8d0c5;border-radius:8px}
 @media(max-width:600px){.related-recipes{margin-top:34px}.related-grid{gap:12px;margin-right:-13px;padding-right:13px;padding-bottom:14px}.related-grid .recipe-card{flex-basis:235px;border-radius:14px}.related-grid .recipe-card>img{height:145px}.related-grid .recipe-card>div{padding:12px}.related-grid .recipe-card h3{font-size:16px}}
+
+
+/* Related recipe cards: align evenly on desktop, swipe cleanly on phones */
+.related-recipes{width:100%;min-width:0}
+.related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;overflow:visible;padding:2px 2px 8px;scroll-snap-type:none}
+.related-grid .recipe-card{display:flex;flex-direction:column;width:100%;min-width:0;min-height:100%;flex:none;overflow:hidden}
+.related-grid .recipe-image-wrap{height:190px;flex:none;overflow:hidden;background:#f1eee6}
+.related-grid .recipe-image-wrap img{width:100%;height:100%;object-fit:cover}
+.related-grid .recipe-body{flex:1;padding:14px 16px 16px;min-width:0}
+.related-grid .related-meta{display:block;font-size:10px;letter-spacing:.04em;color:#758278;font-weight:700}
+.related-grid .recipe-title{font-size:18px;line-height:1.3;margin:7px 0 4px;overflow-wrap:anywhere}
+.related-grid .recipe-title-hi{font-family:"Noto Sans Devanagari",sans-serif;font-size:12px;color:var(--orange);margin:0;min-height:0}
+@media(max-width:700px){.related-grid{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 14px;margin-right:-13px;padding-right:13px;scroll-snap-type:x mandatory;scroll-padding-inline:2px;-webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain}.related-grid .recipe-card{flex:0 0 235px;width:235px;scroll-snap-align:start}.related-grid .recipe-image-wrap{height:145px}.related-grid .recipe-body{padding:12px}.related-grid .recipe-title{font-size:16px}}
+@media(max-width:370px){.related-grid .recipe-card{flex-basis:215px;width:215px}}
