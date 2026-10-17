@@ -7,6 +7,7 @@
   const status=$("#aiStatus"), button=$("#aiGenerateButton"), result=$("#aiResult");
   const savedArea=$("#aiSavedArea"), savedList=$("#aiSavedList");
   const STORAGE_KEY="cookipie-ai-saved-v1";
+  const endpoint=window.COOKIPIE_AI_ENDPOINT||(location.hostname.endsWith("github.io")?"":"/api/ai-cook");
   let currentRecipe=null, language="en";
   const labels={
     en:{loading:"Creating your recipe…",setup:"AI Cook needs its secure server connection before it can generate recipes. The page design is ready, but the AI service has not been connected yet.",error:"Sorry, the recipe could not be created. Please try again in a moment.",ingredients:"Ingredients",steps:"Steps",tip:"Cook's tip",save:"Save privately on this device",saved:"Saved privately on this device.",remove:"Remove",meal:"Meal",mins:"min",serves:"servings",savedTitle:"Your private AI recipes",empty:"No AI recipes saved yet."},
@@ -37,10 +38,10 @@
   form.addEventListener("submit",async e=>{
     e.preventDefault();status.textContent="";const text=ingredients.value.trim();
     if(text.length<2){status.textContent=language==="hi"?"कम से कम एक-दो सामग्री लिखें।":"Please enter at least one or two ingredients.";return}
-    if(!window.COOKIPIE_AI_ENDPOINT){status.textContent=t("setup");return}
+    if(!endpoint){status.textContent=t("setup");return}
     button.disabled=true;status.textContent=t("loading");
     try{
-      const response=await fetch(window.COOKIPIE_AI_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ingredients:text,meal:meal.value,diet:diet.value,language})});
+      const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ingredients:text,meal:meal.value,diet:diet.value,language})});
       const data=await response.json();if(!response.ok)throw new Error(data.error||"request_failed");
       if(!data.recipe||!Array.isArray(data.recipe.ingredients)||!Array.isArray(data.recipe.steps))throw new Error("invalid_recipe");
       currentRecipe={...data.recipe,id:"ai-"+Date.now(),source:"ai"};renderRecipe(currentRecipe);status.textContent="";result.scrollIntoView({behavior:"smooth",block:"start"});
