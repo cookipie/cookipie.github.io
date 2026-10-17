@@ -18,7 +18,9 @@ function render(){
  $("#detailSave").addEventListener("click",()=>{let list=saved(),remove=list.includes(id);list=remove?list.filter(x=>x!==id):[...list,id];try{localStorage.setItem("cookipie-saved-v1",JSON.stringify(list))}catch{}$("#detailSave").textContent=remove?"♡ Save recipe":"♥ Saved";$("#detailSave").setAttribute("aria-pressed",String(!remove));note(remove?"Removed from saved recipes":"Recipe saved on this device")});
  $("#shareRecipe").addEventListener("click",async()=>{try{if(navigator.share)await navigator.share({title:r.name+" — Cookipie",url:location.href});else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(location.href);note("Recipe link copied")}else note("Copy this page link to share it")}catch(e){if(e.name!=="AbortError")note("You can copy this page link to share it")}});
 }
-$("#languageToggle")?.addEventListener("click",()=>{const hi=document.body.classList.toggle("lang-hi");$("#languageToggle").innerHTML=hi?'<strong>हि</strong> <span class="toggle-divider">/</span> EN':'हि <span class="toggle-divider">/</span> <strong>EN</strong>';$$('.detail-intro-hi,.ingredient-hi,.method-hi').forEach(x=>x.style.opacity=hi?"1":".82")});
+function setLanguage(hi){document.body.classList.toggle("lang-hi",hi);try{localStorage.setItem("cookipie-language-v1",hi?"hi":"en")}catch{}const b=$("#languageToggle");if(b){b.innerHTML=hi?'<strong>हि</strong> <span class="toggle-divider">/</span> EN':'हि <span class="toggle-divider">/</span> <strong>EN</strong>';b.setAttribute("aria-label",hi?"Switch to English":"Switch to Hindi")}$(".detail-intro-hi,.ingredient-hi,.method-hi,.detail-title-hi,.recipe-title-hi").forEach(x=>x.style.opacity=hi?"1":".62");document.documentElement.lang=hi?"hi":"en"}
+$("#languageToggle")?.addEventListener("click",()=>setLanguage(!document.body.classList.contains("lang-hi")));
 $("#year").textContent=new Date().getFullYear();
 render();
+let savedLanguage="en";try{savedLanguage=localStorage.getItem("cookipie-language-v1")==="hi"?"hi":"en"}catch{}setLanguage(savedLanguage==="hi");
 })();
