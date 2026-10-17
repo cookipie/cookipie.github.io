@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173f32">
+<meta name="description" content="Your saved Cookipie recipes in one place."><title>Saved Recipes — Cookipie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/recipes.js" defer></script><script src="assets/js/recipe-schema.js" defer></script><script src="assets/js/saved.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+<a class="brand" href="./" aria-label="Cookipie home"><span class="brand-mark">c</span><span>cookipie<span class="brand-dot">.</span></span></a>
+<nav class="main-nav detail-nav" aria-label="Main navigation"><a class="nav-link" href="./#home" data-en="Home" data-hi="होम">Home</a><a class="nav-link" href="./#recipes" data-en="Recipes" data-hi="रेसिपी">Recipes</a><a class="nav-link" href="./#categories" data-en="Categories" data-hi="श्रेणियाँ">Categories</a></nav>
+<div class="header-actions"><button class="language-toggle" id="languageToggle" type="button" aria-label="Switch language">हि <span class="toggle-divider">/</span> <strong>EN</strong></button><a class="saved-link" href="saved.html" aria-current="page"><span>♥</span><span data-en="Saved" data-hi="सेव की गई">Saved</span></a></div>
+</div></header>
+<main class="saved-page section-wrap">
+<a class="saved-back" href="./#recipes" data-en="← Browse recipes" data-hi="← रेसिपी देखें">← Browse recipes</a>
+<div class="saved-heading"><div><p class="eyebrow" data-en="YOUR PERSONAL COLLECTION" data-hi="आपका निजी संग्रह">YOUR PERSONAL COLLECTION</p><h1 data-en="Saved recipes" data-hi="सेव की गई रेसिपी">Saved recipes</h1><p data-en="Keep the dishes you want to cook again, all together in one place." data-hi="जिन रेसिपी को दोबारा बनाना चाहते हैं, उन्हें यहाँ एक जगह रखें।">Keep the dishes you want to cook again, all together in one place.</p></div><span class="saved-count" id="savedCount" aria-live="polite"></span></div>
+<section id="savedGrid" class="saved-grid" aria-label="Saved recipes"></section>
+<section id="savedEmpty" class="saved-empty" hidden><div class="empty-icon">♡</div><h2 data-en="Nothing saved just yet" data-hi="अभी कोई रेसिपी सेव नहीं है">Nothing saved just yet</h2><p data-en="Tap the heart on any recipe you love, and it will show up here." data-hi="अपनी पसंद की किसी भी रेसिपी पर दिल वाले निशान को दबाएँ, वह यहाँ दिखेगी।">Tap the heart on any recipe you love, and it will show up here.</p><a class="primary-button inline-button" href="./#recipes" data-en="Explore recipes" data-hi="रेसिपी खोजें">Explore recipes</a></section>
+<p class="ingredient-hint" data-en="Saved recipes are stored on this device and browser. They do not sync across devices yet." data-hi="सेव की गई रेसिपी इसी डिवाइस और ब्राउज़र में रहती हैं। अभी दूसरे डिवाइस पर सिंक नहीं होतीं।">Saved recipes are stored on this device and browser. They do not sync across devices yet.</p>
+</main>
+<footer class="site-footer"><div class="footer-bottom section-wrap"><span>© <span id="year"></span> Cookipie</span><span>Made for curious home cooks ♡</span></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body></html>
