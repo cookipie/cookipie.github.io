@@ -5,7 +5,8 @@
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const grid=$("#recipeGrid"), search=$("#recipeSearch"), empty=$("#emptyState"), sort=$("#sortRecipes"), toast=$("#toast");
   const diet=$("#filterDiet"), time=$("#filterTime"), difficulty=$("#filterDifficulty");
-  let activeCategory="all", query="", language="en", saved=readSaved(), toastTimer;
+  let activeCategory="all", query="", language=readLanguage(), saved=readSaved(), toastTimer;
+  function readLanguage(){try{return localStorage.getItem("cookipie-language-v1")==="hi"?"hi":"en"}catch{return"en"}}
   function readSaved(){try{return JSON.parse(localStorage.getItem("cookipie-saved-v1")||"[]").filter(id=>typeof id==="string")}catch{return[]}}
   function saveSaved(){try{localStorage.setItem("cookipie-saved-v1",JSON.stringify(saved))}catch{}}
   function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2400)}
@@ -37,7 +38,7 @@
     activeCategory="all";query="";search.value="";diet.value="all";time.value="0";difficulty.value="all";sort.value="featured";updateCategoryButtons();render();
   }
   function setLanguage(next){
-    language=next;document.body.classList.toggle("lang-hi",language==="hi");
+    language=next;document.body.classList.toggle("lang-hi",language==="hi");try{localStorage.setItem("cookipie-language-v1",language)}catch{}
     $$("[data-en][data-hi]").forEach(el=>{el.innerHTML=el.dataset[language]});
     $("#languageToggle").innerHTML=language==="en"?'हि <span class="toggle-divider">/</span> <strong>EN</strong>':'<strong>हि</strong> <span class="toggle-divider">/</span> EN';
     $("#languageToggle").setAttribute("aria-label",language==="en"?"Switch to Hindi":"Switch to English");
@@ -67,5 +68,5 @@
   const menu=$("#menuToggle"),nav=$("#mainNav");
   menu.addEventListener("click",()=>{const open=nav.classList.toggle("open");menu.setAttribute("aria-expanded",String(open));menu.setAttribute("aria-label",open?"Close navigation":"Open navigation");menu.textContent=open?"×":"☰"});
   $$(".nav-link").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");menu.setAttribute("aria-expanded","false");menu.textContent="☰"}));
-  $("#year").textContent=new Date().getFullYear();render();
+  $("#year").textContent=new Date().getFullYear();setLanguage(language);
 })();
