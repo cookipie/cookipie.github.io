@@ -16,5 +16,11 @@
       "database_name": "cookipie-reviews",
       "database_id": "3dd00de4-7ca3-41f4-a678-3885e1420eab"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "RECIPE_IMAGES",
+      "bucket_name": "cookipie-recipe-images"
+    }
   ]
 }
