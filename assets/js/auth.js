@@ -106,7 +106,7 @@
       buttonPaint(data.session);
       client.auth.onAuthStateChange((_event, session) => buttonPaint(session));
     } catch (error) { console.error("Cookipie auth initialization failed:", error); }
-    finally { resolveReady(); }
+    finally { resolveReady(); document.dispatchEvent(new Event("cookipie-auth-ready")); }
   }
   window.COOKIPIE_AUTH = { ready, getSession, requireLogin, login, api, setSaved, getSaved, toggleRecipeLike, getRecipeLikes, toggleReviewLike };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true }); else init();
