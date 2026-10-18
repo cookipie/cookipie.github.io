@@ -3,7 +3,7 @@
   const authScript=document.createElement("script");
   authScript.src="assets/js/auth.js?v=2";
   document.head.appendChild(authScript);
-  const recipes = Object.entries(window.COOKIPIE_RECIPES || {}).map(([id,r]) => ({id,...r}));
+  let recipes = Object.entries(window.COOKIPIE_RECIPES || {}).map(([id,r]) => ({id,...r}));
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const grid=$("#recipeGrid"), search=$("#recipeSearch"), empty=$("#emptyState"), sort=$("#sortRecipes"), toast=$("#toast");
@@ -90,6 +90,20 @@
     }catch(error){console.warn("Cookipie account data sync failed",error?.message||"Error");}
   }
   window.addEventListener("storage",e=>{if(e.key==="cookipie-saved-v1"){saved=readSaved();render();}});
+  async function loadPublicRecipes(){
+    try{
+      const base=location.hostname.endsWith("github.io")?"https://cookipie-github-io.uplakshapanwar.workers.dev":"";
+      const response=await fetch(base+"/api/recipes-admin",{cache:"no-store"});
+      if(!response.ok)return;
+      const data=await response.json();
+      const custom=(data.recipes||[]).map(r=>({...r,introHi:r.introHi||r.intro_hi||""}));
+      const ids=new Set(custom.map(r=>r.id));
+      recipes=[...recipes.filter(r=>!ids.has(r.id)),...custom];
+      render();
+      if(window.COOKIPIE_AUTH)syncAccountData();
+    }catch(error){console.warn("Cookipie public recipes could not load",error?.message||"Error");}
+  }
+  loadPublicRecipes();
   window.COOKIPIE_AUTH?.ready?.then(syncAccountData);
   document.addEventListener("cookipie-auth-ready",syncAccountData,{once:true});
   $$(".collection-card").forEach(b=>b.addEventListener("click",()=>{
