@@ -1,8 +1,13 @@
 import { onRequestPost } from "./functions/api/ai-cook.js";
+import { onRequest as onReviewsRequest } from "./functions/api/reviews.js";
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/reviews") {
+      return onReviewsRequest({ request, env, ctx });
+    }
 
     if (url.pathname === "/api/ai-cook") {
       if (request.method !== "POST") {
