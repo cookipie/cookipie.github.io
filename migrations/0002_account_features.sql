@@ -25,3 +25,12 @@ CREATE TABLE IF NOT EXISTS review_likes (
   PRIMARY KEY (user_id, review_id)
 );
 CREATE INDEX IF NOT EXISTS idx_review_likes_review ON review_likes(review_id);
+
+CREATE TABLE IF NOT EXISTS saved_ai_recipes (
+  user_id TEXT NOT NULL,
+  recipe_id TEXT NOT NULL,
+  recipe_json TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (user_id, recipe_id)
+);
+CREATE INDEX IF NOT EXISTS idx_saved_ai_recipes_user_created ON saved_ai_recipes(user_id, created_at DESC);
