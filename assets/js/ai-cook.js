@@ -28,8 +28,11 @@
   }
   async function saveRecipe(r){
     const auth=window.COOKIPIE_AUTH,session=auth?await auth.requireLogin():null;if(!session){status.textContent=language==="hi"?"AI रेसिपी सेव करने के लिए पहले लॉगिन करें।":"Please sign in with Google to save AI recipes.";return;}
-    const items=readSaved();if(!items.some(x=>x.id===r.id)){items.unshift({...r,id:r.id||("ai-"+Date.now())});writeSaved(items);renderSaved()}
-    status.textContent=t("saved");
+    const items=readSaved(),recipe={...r,id:r.id||("ai-"+Date.now())};
+    if(!items.some(x=>x.id===recipe.id)){
+      try{await auth.api("/api/account-data",{method:"POST",body:JSON.stringify({action:"save-ai",recipe})});items.unshift(recipe);writeSaved(items);renderSaved();status.textContent=t("saved");}
+      catch(error){status.textContent=error.message==="account_data_setup_required"?"Account features are being enabled. Please try again shortly.":"Could not save this AI recipe. Please retry.";}
+    } else status.textContent=t("saved");
   }
   function renderSaved(){
     const items=readSaved();savedArea.hidden=items.length===0;
