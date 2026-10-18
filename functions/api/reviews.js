@@ -50,8 +50,19 @@ export async function onRequest(context) {
       const myRecipeLike = user ? await env.DB.prepare("SELECT 1 AS liked FROM recipe_likes WHERE recipe_id = ? AND user_id = ?").bind(recipeId, user.id).first() : null;
       return json({ reviews: reviews.results || [], comments: comments.results || [], recipeLikeCount: Number(recipeLikes?.count || 0), recipeLikedByMe: !!myRecipeLike });
     } catch (error) {
-      console.error("Cookipie reviews read failed", error?.name || "Error");
-      return json({ error: "reviews_unavailable" }, 503);
+      // Keep existing public reviews visible while migration 0002 is pending.
+      try {
+        const reviews = await env.DB.prepare(
+          "SELECT id, recipe_id AS recipeId, reviewer_name AS name, rating, review_text AS text, created_at AS createdAt FROM recipe_reviews WHERE recipe_id = ? ORDER BY created_at DESC LIMIT 100"
+        ).bind(recipeId).all();
+        const comments = await env.DB.prepare(
+          "SELECT id, review_id AS reviewId, commenter_name AS name, comment_text AS text, created_at AS createdAt FROM recipe_review_comments WHERE review_id IN (SELECT id FROM recipe_reviews WHERE recipe_id = ?) ORDER BY created_at ASC LIMIT 500"
+        ).bind(recipeId).all();
+        return json({ reviews: reviews.results || [], comments: comments.results || [], recipeLikeCount: 0, recipeLikedByMe: false, migrationPending: true });
+      } catch (fallbackError) {
+        console.error("Cookipie reviews read failed", fallbackError?.name || "Error");
+        return json({ error: "reviews_unavailable" }, 503);
+      }
     }
   }
   if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
