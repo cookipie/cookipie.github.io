@@ -40,6 +40,11 @@ export async function onRequest(context) {
         const rows = await env.DB.prepare("SELECT recipe_id AS recipeId FROM saved_recipes WHERE user_id = ? ORDER BY created_at DESC").bind(user.id).all();
         return json({ recipeIds: (rows.results || []).map(row => row.recipeId) });
       }
+      if (action === "list-ai-saved") {
+        const rows = await env.DB.prepare("SELECT recipe_json AS recipeJson FROM saved_ai_recipes WHERE user_id = ? ORDER BY created_at DESC").bind(user.id).all();
+        const recipes = (rows.results || []).flatMap(row => { try { return [JSON.parse(row.recipeJson)]; } catch { return []; } });
+        return json({ recipes });
+      }
       if (action === "recipe-likes") {
         const recipeId = clean(url.searchParams.get("recipeId"), 80);
         if (!validRecipe(recipeId)) return json({ error: "invalid_recipe" }, 400);
@@ -59,6 +64,21 @@ export async function onRequest(context) {
   const action = body?.action, recipeId = clean(body?.recipeId, 80);
   if (!validRecipe(recipeId)) return json({ error: "invalid_recipe" }, 400);
   try {
+    if (action === "save-ai") {
+      const recipe = body?.recipe;
+      const aiId = clean(recipe?.id, 100);
+      if (!aiId || !/^ai-[a-z0-9-]{1,90}$/i.test(aiId) || typeof recipe?.name !== "string" || !Array.isArray(recipe?.ingredients) || !Array.isArray(recipe?.steps)) return json({ error: "invalid_ai_recipe" }, 400);
+      const serialized = JSON.stringify(recipe);
+      if (serialized.length > 60000) return json({ error: "ai_recipe_too_large" }, 413);
+      await env.DB.prepare("INSERT INTO saved_ai_recipes (user_id, recipe_id, recipe_json) VALUES (?, ?, ?) ON CONFLICT(user_id, recipe_id) DO UPDATE SET recipe_json = excluded.recipe_json").bind(user.id, aiId, serialized).run();
+      return json({ ok: true, saved: true });
+    }
+    if (action === "unsave-ai") {
+      const aiId = clean(body?.recipeId, 100);
+      if (!/^ai-[a-z0-9-]{1,90}$/i.test(aiId)) return json({ error: "invalid_ai_recipe" }, 400);
+      await env.DB.prepare("DELETE FROM saved_ai_recipes WHERE user_id = ? AND recipe_id = ?").bind(user.id, aiId).run();
+      return json({ ok: true, saved: false });
+    }
     if (action === "save") {
       await env.DB.prepare("INSERT OR IGNORE INTO saved_recipes (user_id, recipe_id) VALUES (?, ?)").bind(user.id, recipeId).run();
       return json({ ok: true, saved: true });
