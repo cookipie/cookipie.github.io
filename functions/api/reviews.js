@@ -3,7 +3,10 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
   headers: {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
-    "X-Content-Type-Options": "nosniff"
+    "X-Content-Type-Options": "nosniff",
+    "Access-Control-Allow-Origin": "https://cookipie.github.io",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
   }
 });
 const clean = (value, max) => typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -11,6 +14,17 @@ const id = () => crypto.randomUUID();
 
 export async function onRequest(context) {
   const { request, env } = context;
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "https://cookipie.github.io",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Max-Age": "86400"
+      }
+    });
+  }
   if (!env.DB) return json({ error: "reviews_setup_required" }, 503);
   if (request.method === "GET") {
     const url = new URL(request.url);
