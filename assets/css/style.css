@@ -89,3 +89,6 @@
 
 /* Open saved private AI recipes */
 .ai-saved-name{min-width:0;flex:1}.ai-open-saved{display:block;max-width:100%;padding:0;border:0;background:transparent;text-align:left;color:var(--green);cursor:pointer}.ai-open-saved strong{overflow-wrap:anywhere}.ai-open-saved small{margin-top:4px}.ai-open-saved:hover strong,.ai-open-saved:focus-visible strong{text-decoration:underline}.ai-saved-item>[data-ai-remove]{flex:0 0 auto}
+
+/* Private AI recipes in the shared Saved Recipes collection */
+.saved-ai-card .saved-ai-art{display:flex;align-items:center;justify-content:center;gap:16px;flex-direction:column;background:radial-gradient(circle at 50% 35%,#f7dfc6 0,#f3e9d8 46%,#e5ecdf 100%);color:var(--green)}.saved-ai-art>span:first-child{font-size:64px;line-height:1}.saved-ai-label{font-size:9px;font-weight:800;letter-spacing:1.5px}.saved-ai-intro{font-size:12px;line-height:1.65;color:#68766d;margin:10px 0}.saved-ai-meta{margin-top:8px}.saved-ai-detail{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}.saved-ai-detail h4{font-size:13px;color:var(--green);margin:16px 0 8px}.saved-ai-detail ul,.saved-ai-detail ol{padding-left:22px;margin:0;display:grid;gap:9px}.saved-ai-detail li,.saved-ai-detail p{font-size:12px;line-height:1.7;color:var(--ink)}.saved-ai-detail[hidden]{display:none}
