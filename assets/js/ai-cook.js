@@ -26,7 +26,8 @@
     result.hidden=false;
     $("#aiSaveResult").addEventListener("click",()=>saveRecipe(r));
   }
-  function saveRecipe(r){
+  async function saveRecipe(r){
+    const auth=window.COOKIPIE_AUTH,session=auth?await auth.requireLogin():null;if(!session){status.textContent=language==="hi"?"AI रेसिपी सेव करने के लिए पहले लॉगिन करें।":"Please sign in with Google to save AI recipes.";return;}
     const items=readSaved();if(!items.some(x=>x.id===r.id)){items.unshift({...r,id:r.id||("ai-"+Date.now())});writeSaved(items);renderSaved()}
     status.textContent=t("saved");
   }
