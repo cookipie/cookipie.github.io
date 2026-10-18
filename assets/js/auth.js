@@ -79,7 +79,30 @@
   async function toggleReviewLike(reviewId, recipeId) {
     return api("/api/reviews", { method: "POST", body: JSON.stringify({ action: "toggle-review-like", reviewId, recipeId }) });
   }
+  let adminButtonCheck = 0;
+  async function updateManageRecipesButton(session) {
+    const checkId = ++adminButtonCheck;
+    document.querySelector("#manageRecipesButton")?.remove();
+    if (!session?.user) return;
+    try {
+      // The server confirms admin permission; ordinary signed-in users never see this link.
+      await api("/api/recipes-admin?action=admin");
+      if (checkId !== adminButtonCheck || !document.querySelector(".header-actions")) return;
+      const link = document.createElement("a");
+      link.id = "manageRecipesButton";
+      link.className = "saved-link";
+      link.href = "admin-recipes.html";
+      link.textContent = "Manage Recipes";
+      link.setAttribute("aria-label", "Manage Cookipie recipes");
+      const actions = document.querySelector(".header-actions");
+      const account = document.querySelector("#authButton");
+      actions.insertBefore(link, account || actions.firstChild);
+    } catch (_) {
+      // No admin permission or API unavailable: keep the management link hidden.
+    }
+  }
   const buttonPaint = session => {
+    updateManageRecipesButton(session);
     const button = addAuthButton(); if (!button) return;
     if (session?.user) {
       const name = session.user.user_metadata?.full_name || session.user.email || "Account";
