@@ -8,7 +8,7 @@
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const grid=$("#recipeGrid"), search=$("#recipeSearch"), empty=$("#emptyState"), sort=$("#sortRecipes"), toast=$("#toast");
   const diet=$("#filterDiet"), time=$("#filterTime"), difficulty=$("#filterDifficulty");
-  let activeCategory="all", query="", language=readLanguage(), saved=readSaved(), toastTimer;
+  let activeCategory="all", query="", language=readLanguage(), saved=readSaved(), toastTimer, recipeLikes={};
   function readLanguage(){try{return localStorage.getItem("cookipie-language-v1")==="hi"?"hi":"en"}catch{return"en"}}
   function readSaved(){try{return JSON.parse(localStorage.getItem("cookipie-saved-v1")||"[]").filter(id=>typeof id==="string")}catch{return[]}}
   function saveSaved(){try{localStorage.setItem("cookipie-saved-v1",JSON.stringify(saved))}catch{}}
@@ -20,7 +20,7 @@
   function card(r){
     const level=r.difficulty||"easy";
     const levelLabel=language==="hi"?({easy:"आसान",medium:"मध्यम",hard:"कठिन"}[level]||"आसान"):({easy:"EASY",medium:"MEDIUM",hard:"HARD"}[level]||"EASY");
-    return `<article class="recipe-card"><div class="recipe-image-wrap"><img src="${r.image}" alt="${r.alt}" loading="lazy" onerror="this.style.opacity='.15';this.alt='Recipe photo unavailable'"><span class="diet-badge ${r.kind==="nonveg"?"nonveg":""}"><i class="diet-dot"></i>${r.kind==="veg"?(language==="hi"?"शाकाहारी":"VEG"):(language==="hi"?"मांसाहारी":"NON-VEG")}</span><button class="save-recipe ${saved.includes(r.id)?"saved":""}" data-save="${r.id}" aria-label="${saved.includes(r.id)?"Remove saved recipe":"Save recipe"}" aria-pressed="${saved.includes(r.id)}">${saved.includes(r.id)?"♥":"♡"}</button></div><div class="recipe-body"><div class="recipe-meta"><span>◷ ${r.time} ${language==="hi"?"मिनट":"min"}</span><span class="meta-separator">•</span><span>${levelLabel}</span></div><h3 class="recipe-title">${r.name}</h3><p class="recipe-title-hi">${r.hi}</p><div class="recipe-bottom"><span class="recipe-time">${language==="hi"?"शुरुआती संग्रह":"Featured recipe"}</span><a class="recipe-open" href="recipe.html?id=${encodeURIComponent(r.id)}">${language==="hi"?"रेसिपी देखें":"View recipe"} ↗</a></div></div></article>`;
+    return `<article class="recipe-card"><div class="recipe-image-wrap"><img src="${r.image}" alt="${r.alt}" loading="lazy" onerror="this.style.opacity='.15';this.alt='Recipe photo unavailable'"><span class="diet-badge ${r.kind==="nonveg"?"nonveg":""}"><i class="diet-dot"></i>${r.kind==="veg"?(language==="hi"?"शाकाहारी":"VEG"):(language==="hi"?"मांसाहारी":"NON-VEG")}</span><button class="save-recipe ${saved.includes(r.id)?"saved":""}" data-save="${r.id}" aria-label="${saved.includes(r.id)?"Remove saved recipe":"Save recipe"}" aria-pressed="${saved.includes(r.id)}">${saved.includes(r.id)?"♥":"♡"}</button></div><div class="recipe-body"><div class="recipe-meta"><span>◷ ${r.time} ${language==="hi"?"मिनट":"min"}</span><span class="meta-separator">•</span><span>${levelLabel}</span></div><h3 class="recipe-title">${r.name}</h3><p class="recipe-title-hi">${r.hi}</p><div class="recipe-bottom"><span class="recipe-time">${language==="hi"?"शुरुआती संग्रह":"Featured recipe"}</span><a class="recipe-open" href="recipe.html?id=${encodeURIComponent(r.id)}">${language==="hi"?"रेसिपी देखें":"View recipe"} ↗</a></div><button class="outline-button recipe-like-button" data-like="${r.id}" aria-pressed="${!!recipeLikes[r.id]?.liked}">♥ <span>${language==="hi"?"पसंद":"Like"}</span> <span class="like-count">${Number(recipeLikes[r.id]?.count||0)}</span></button></div></article>`;
   }
   function render(){
     let list=recipes.filter(r=>{
@@ -59,11 +59,39 @@
   $("#resetFilters").addEventListener("click",resetFilters);
   $("#clearSearch").addEventListener("click",resetFilters);
   $("#languageToggle").addEventListener("click",()=>setLanguage(language==="en"?"hi":"en"));
-  grid.addEventListener("click",e=>{
-    const save=e.target.closest("[data-save]");if(!save)return;
-    const id=save.dataset.save;saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];saveSaved();render();
-    showToast(saved.includes(id)?(language==="hi"?"रेसिपी इस डिवाइस पर सेव हुई":"Recipe saved on this device"):(language==="hi"?"सेव की गई रेसिपी से हटाया":"Removed from saved recipes"));
+  grid.addEventListener("click",async e=>{
+    const save=e.target.closest("[data-save]");
+    if(save){
+      const auth=window.COOKIPIE_AUTH, session=auth?await auth.requireLogin():null;
+      if(!session)return;
+      const id=save.dataset.save, wasSaved=saved.includes(id), next=wasSaved?saved.filter(x=>x!==id):[...saved,id];
+      try{await auth.setSaved(id,!wasSaved);saved=next;saveSaved();render();showToast(wasSaved?(language==="hi"?"सेव से हटाया":"Removed from saved recipes"):(language==="hi"?"आपके अकाउंट में सेव हुआ":"Saved to your account"));}
+      catch(error){showToast(error.message==="account_data_setup_required"?"Account features are being enabled. Please try again shortly.":"Could not update saved recipes. Please retry.");}
+      return;
+    }
+    const like=e.target.closest("[data-like]");
+    if(like){
+      const auth=window.COOKIPIE_AUTH, session=auth?await auth.requireLogin():null;
+      if(!session)return;
+      try{recipeLikes[like.dataset.like]=await auth.toggleRecipeLike(like.dataset.like);render();}
+      catch(error){showToast(error.message==="account_data_setup_required"?"Account features are being enabled. Please try again shortly.":"Could not update like. Please retry.");}
+    }
   });
+  async function syncAccountData(){
+    const auth=window.COOKIPIE_AUTH;if(!auth)return;
+    await auth.ready;
+    const session=await auth.getSession();if(!session)return;
+    try{
+      const remote=await auth.getSaved(), remoteIds=Array.isArray(remote.recipeIds)?remote.recipeIds:[];
+      for(const recipeId of saved){if(!remoteIds.includes(recipeId))await auth.setSaved(recipeId,true);}
+      saved=[...new Set([...remoteIds,...saved])];saveSaved();render();
+      await Promise.all(recipes.map(async recipe=>{try{recipeLikes[recipe.id]=await auth.getRecipeLikes(recipe.id)}catch{}}));
+      render();
+    }catch(error){console.warn("Cookipie account data sync failed",error?.message||"Error");}
+  }
+  window.addEventListener("storage",e=>{if(e.key==="cookipie-saved-v1"){saved=readSaved();render();}});
+  window.COOKIPIE_AUTH?.ready?.then(syncAccountData);
+  document.addEventListener("cookipie-auth-ready",syncAccountData,{once:true});
   $$(".collection-card").forEach(b=>b.addEventListener("click",()=>{
     activeCategory=b.dataset.collection;query="";search.value="";diet.value="all";time.value="0";difficulty.value="all";
     updateCategoryButtons();render();$("#recipes").scrollIntoView({behavior:"smooth"});
