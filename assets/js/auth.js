@@ -5,6 +5,14 @@
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_sIFiT_rsIK2Eqa_RzkOvpQ_5RqTz5X0";
   const SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 
+  function addStyles() {
+    if (document.getElementById("cookipie-auth-styles")) return;
+    const style = document.createElement("style");
+    style.id = "cookipie-auth-styles";
+    style.textContent = ".auth-button{border:1px solid var(--line);border-radius:30px;background:var(--green);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;white-space:nowrap}.auth-button:disabled{opacity:.65;cursor:wait}@media(max-width:700px){.auth-button{padding:7px 10px;font-size:11px}}";
+    document.head.appendChild(style);
+  }
+
   function loadSupabase() {
     if (window.supabase?.createClient) return Promise.resolve();
     return new Promise((resolve, reject) => {
@@ -35,6 +43,7 @@
 
   async function init() {
     try {
+      addStyles();
       await loadSupabase();
       const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
       window.COOKIPIE_SUPABASE = client;
