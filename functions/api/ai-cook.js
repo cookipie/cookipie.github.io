@@ -21,7 +21,17 @@ export async function onRequestPost(context) {
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7,maxOutputTokens:1800,responseMimeType:"application/json"}})
     });
     const payload=await upstream.json();
-    if(!upstream.ok) return json({error:"AI service could not complete the request."},502);
+    if(!upstream.ok) {
+      const upstreamStatus=payload?.error?.status||"";
+      const upstreamCode=payload?.error?.code||upstream.status;
+      console.error("Cookipie Gemini API error", {httpStatus:upstream.status, code:upstreamCode, status:upstreamStatus});
+      let error="gemini_request";
+      if(upstream.status===401 || upstream.status===403) error="gemini_permission";
+      else if(upstream.status===429) error="gemini_quota";
+      else if(upstream.status===404) error="gemini_model";
+      else if(upstream.status>=500) error="gemini_unavailable";
+      return json({error, upstreamStatus:upstream.status},502);
+    }
     const text=payload?.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("").trim();
     if(!text) return json({error:"No recipe was returned."},502);
     let recipe;
