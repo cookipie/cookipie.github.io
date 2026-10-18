@@ -38,7 +38,7 @@ function mountReviews(){
 async function loadReviews(){
  const list=$("#reviewsList"),summary=$("#reviewsSummary");if(!list||!summary)return;
  try{
-  const response=await fetch("/api/reviews?recipeId="+encodeURIComponent(id),{headers:{"Accept":"application/json"}});
+  const response=await fetch((location.hostname.endsWith("github.io")?"https://cookipie-github-io.uplakshapanwar.workers.dev/api/reviews?recipeId=":"/api/reviews?recipeId=")+encodeURIComponent(id),{headers:{"Accept":"application/json"}});
   const data=await response.json();if(!response.ok)throw new Error(data.error||"unavailable");
   const reviews=Array.isArray(data.reviews)?data.reviews:[],comments=Array.isArray(data.comments)?data.comments:[];
   const average=reviews.length?reviews.reduce((sum,item)=>sum+Number(item.rating||0),0)/reviews.length:0;
