@@ -7,16 +7,36 @@ function readLanguage(){try{return localStorage.getItem("cookipie-language-v1")=
 const $=(s,r=document)=>r.querySelector(s);
 function readSaved(){try{const v=JSON.parse(localStorage.getItem("cookipie-saved-v1")||"[]");return Array.isArray(v)?v.filter(id=>typeof id==="string"):[]}catch{return[]}}
 function writeSaved(ids){try{localStorage.setItem("cookipie-saved-v1",JSON.stringify(ids))}catch{}}
+function readAiSaved(){try{const v=JSON.parse(localStorage.getItem("cookipie-ai-saved-v1")||"[]");return Array.isArray(v)?v.filter(r=>r&&typeof r.name==="string"&&Array.isArray(r.ingredients)&&Array.isArray(r.steps)):[]}catch{return[]}}
+function writeAiSaved(items){try{localStorage.setItem("cookipie-ai-saved-v1",JSON.stringify(items))}catch{}}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function pair(v){return typeof v==="string"?{en:v,hi:v}:(v&&typeof v==="object"?v:{en:"",hi:""})}
 function note(s){toast.textContent=s;toast.classList.add("show");clearTimeout(timer);timer=setTimeout(()=>toast.classList.remove("show"),2200)}
+function aiCard(r,i){
+ const intro=pair({en:r.intro||"",hi:r.introHi||""});
+ const ing=r.ingredients.map(x=>{x=pair(x);return "<li>"+esc(x.en)+(x.hi?'<span class="ai-recipe-hi-line" lang="hi">'+esc(x.hi)+"</span>":"")+"</li>"}).join("");
+ const steps=r.steps.map(x=>{x=pair(x);return "<li>"+esc(x.en)+(x.hi?'<span class="ai-recipe-hi-line" lang="hi">'+esc(x.hi)+"</span>":"")+"</li>"}).join("");
+ const detailId="saved-ai-detail-"+i;
+ return '<article class="recipe-card saved-ai-card"><div class="recipe-image-wrap saved-ai-art" aria-hidden="true"><span>🥘</span><span class="saved-ai-label">'+(language==="hi"?"निजी AI रेसिपी":"PRIVATE AI RECIPE")+'</span></div><div class="recipe-body"><div class="recipe-meta"><span>✦ '+(language==="hi"?"AI से बनी":"AI generated")+'</span></div><h3 class="recipe-title">'+esc(r.name)+'</h3><p class="recipe-title-hi">'+esc(r.nameHi||"")+'</p><p class="saved-ai-intro">'+esc(intro.en)+(intro.hi?'<span class="ai-recipe-hi-line" lang="hi">'+esc(intro.hi)+"</span>":"")+'</p><div class="recipe-meta saved-ai-meta"><span>◷ '+esc(r.prepTime||0)+' + '+esc(r.cookTime||0)+' '+(language==="hi"?"मिनट":"min")+'</span><span>♙ '+esc(r.servings||2)+' '+(language==="hi"?"लोग":"servings")+'</span></div><div class="saved-card-actions"><button type="button" class="recipe-open" data-ai-toggle="'+i+'" aria-expanded="false" aria-controls="'+detailId+'">'+(language==="hi"?"रेसिपी खोलें":"View recipe")+' ↗</button><button type="button" class="saved-remove" data-ai-remove="'+i+'">'+(language==="hi"?"हटाएँ":"Remove")+'</button></div><div class="saved-ai-detail" id="'+detailId+'" hidden><h4>'+(language==="hi"?"सामग्री":"Ingredients")+'</h4><ul>'+ing+'</ul><h4>'+(language==="hi"?"बनाने का तरीका":"Steps")+'</h4><ol>'+steps+'</ol>'+(r.tip||r.tipHi?'<h4>'+(language==="hi"?"कुक की सलाह":"Cook’s tip")+'</h4><p>'+esc(r.tip||"")+(r.tipHi?'<span class="ai-recipe-hi-line" lang="hi">'+esc(r.tipHi)+"</span>":"")+"</p>":"")+"</div></div></article>";
+}
 function render(){
- const ids=readSaved(),items=ids.filter(id=>recipes[id]).map(id=>({id,...recipes[id]}));
- count.textContent=language==="hi"?items.length+" रेसिपी":items.length+" "+(items.length===1?"recipe":"recipes");
- empty.hidden=items.length>0;grid.hidden=items.length===0;
- grid.innerHTML=items.map(r=>'<article class="recipe-card"><div class="recipe-image-wrap"><img src="'+r.image+'" alt="'+r.alt+'" loading="lazy"><span class="diet-badge '+(r.kind==="nonveg"?"nonveg":"")+'"><i class="diet-dot"></i>'+(r.kind==="veg"?(language==="hi"?"शाकाहारी":"VEG"):(language==="hi"?"मांसाहारी":"NON-VEG"))+'</span><button class="save-recipe saved" data-remove="'+r.id+'" aria-label="'+(language==="hi"?"सेव से हटाएँ":"Remove saved recipe")+'" aria-pressed="true">♥</button></div><div class="recipe-body"><div class="recipe-meta"><span>◷ '+r.time+' '+(language==="hi"?"मिनट":"min")+'</span><span class="meta-separator">•</span><span>'+(language==="hi"?"सेव की गई":"SAVED")+'</span></div><h3 class="recipe-title">'+r.name+'</h3><p class="recipe-title-hi">'+r.hi+'</p><div class="saved-card-actions"><a class="recipe-open" href="recipe.html?id='+encodeURIComponent(r.id)+'">'+(language==="hi"?"रेसिपी देखें":"View recipe")+' ↗</a><button class="saved-remove" data-remove="'+r.id+'">'+(language==="hi"?"हटाएँ":"Remove")+'</button></div></div></article>').join("");
+ const ids=readSaved(),items=ids.filter(id=>recipes[id]).map(id=>({id,...recipes[id]})),aiItems=readAiSaved();
+ const total=items.length+aiItems.length;
+ count.textContent=language==="hi"?total+" रेसिपी":total+" "+(total===1?"recipe":"recipes");
+ empty.hidden=total>0;grid.hidden=total===0;
+ const publicHtml=items.map(r=>'<article class="recipe-card"><div class="recipe-image-wrap"><img src="'+esc(r.image)+'" alt="'+esc(r.alt)+'" loading="lazy"><span class="diet-badge '+(r.kind==="nonveg"?"nonveg":"")+'"><i class="diet-dot"></i>'+(r.kind==="veg"?(language==="hi"?"शाकाहारी":"VEG"):(language==="hi"?"मांसाहारी":"NON-VEG"))+'</span><button class="save-recipe saved" data-remove="'+esc(r.id)+'" aria-label="'+(language==="hi"?"सेव से हटाएँ":"Remove saved recipe")+'" aria-pressed="true">♥</button></div><div class="recipe-body"><div class="recipe-meta"><span>◷ '+esc(r.time)+' '+(language==="hi"?"मिनट":"min")+'</span><span class="meta-separator">•</span><span>'+(language==="hi"?"सेव की गई":"SAVED")+'</span></div><h3 class="recipe-title">'+esc(r.name)+'</h3><p class="recipe-title-hi">'+esc(r.hi)+'</p><div class="saved-card-actions"><a class="recipe-open" href="recipe.html?id='+encodeURIComponent(r.id)+'">'+(language==="hi"?"रेसिपी देखें":"View recipe")+' ↗</a><button class="saved-remove" data-remove="'+esc(r.id)+'">'+(language==="hi"?"हटाएँ":"Remove")+'</button></div></div></article>').join("");
+ grid.innerHTML=publicHtml+aiItems.map(aiCard).join("");
 }
 function setLanguage(next){language=next;document.body.classList.toggle("lang-hi",language==="hi");try{localStorage.setItem("cookipie-language-v1",language)}catch{}document.querySelectorAll("[data-en][data-hi]").forEach(el=>el.innerHTML=el.dataset[language]);$("#languageToggle").innerHTML=language==="hi"?"<strong>हि</strong> <span class='toggle-divider'>/</span> EN":"हि <span class='toggle-divider'>/</span> <strong>EN</strong>";$("#languageToggle").setAttribute("aria-label",language==="hi"?"Switch to English":"Switch to Hindi");document.documentElement.lang=language==="hi"?"hi":"en";render()}
 $("#languageToggle").addEventListener("click",()=>setLanguage(language==="en"?"hi":"en"));
-grid.addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(!b)return;const id=b.dataset.remove;writeSaved(readSaved().filter(x=>x!==id));render();note(language==="hi"?"रेसिपी सेव की गई सूची से हटा दी गई":"Recipe removed from saved list")});
-window.addEventListener("storage",e=>{if(e.key==="cookipie-saved-v1")render()});
+grid.addEventListener("click",e=>{
+ const remove=e.target.closest("[data-remove]");
+ if(remove){const id=remove.dataset.remove;writeSaved(readSaved().filter(x=>x!==id));render();note(language==="hi"?"रेसिपी सेव की गई सूची से हटा दी गई":"Recipe removed from saved list");return}
+ const aiRemove=e.target.closest("[data-ai-remove]");
+ if(aiRemove){const all=readAiSaved();all.splice(Number(aiRemove.dataset.aiRemove),1);writeAiSaved(all);render();note(language==="hi"?"निजी AI रेसिपी हटा दी गई":"Private AI recipe removed");return}
+ const toggle=e.target.closest("[data-ai-toggle]");
+ if(toggle){const detail=$("#"+toggle.getAttribute("aria-controls"));if(detail){const open=detail.hidden;detail.hidden=!open;toggle.setAttribute("aria-expanded",String(open));toggle.textContent=(open?(language==="hi"?"रेसिपी बंद करें":"Hide recipe"):(language==="hi"?"रेसिपी खोलें":"View recipe"))+(open?" ↑":" ↗")}}
+});
+window.addEventListener("storage",e=>{if(e.key==="cookipie-saved-v1"||e.key==="cookipie-ai-saved-v1")render()});
 $("#year").textContent=new Date().getFullYear();setLanguage(language);
 })();
