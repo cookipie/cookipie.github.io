@@ -2,7 +2,7 @@
 "use strict";
 const recipes=window.COOKIPIE_RECIPES||{};
 const grid=document.querySelector("#savedGrid"),empty=document.querySelector("#savedEmpty"),count=document.querySelector("#savedCount"),toast=document.querySelector("#toast");
-let language=readLanguage(),timer;
+let language=readLanguage(),timer,accountReady=false,accountUser=null;
 function readLanguage(){try{return localStorage.getItem("cookipie-language-v1")==="hi"?"hi":"en"}catch{return"en"}}
 const $=(s,r=document)=>r.querySelector(s);
 function readSaved(){try{const v=JSON.parse(localStorage.getItem("cookipie-saved-v1")||"[]");return Array.isArray(v)?v.filter(id=>typeof id==="string"):[]}catch{return[]}}
@@ -20,6 +20,7 @@ function aiCard(r,i){
  return '<article class="recipe-card saved-ai-card"><div class="recipe-image-wrap saved-ai-art" aria-hidden="true"><span>🥘</span><span class="saved-ai-label">'+(language==="hi"?"निजी AI रेसिपी":"PRIVATE AI RECIPE")+'</span></div><div class="recipe-body"><div class="recipe-meta"><span>✦ '+(language==="hi"?"AI से बनी":"AI generated")+'</span></div><h3 class="recipe-title">'+esc(r.name)+'</h3><p class="recipe-title-hi">'+esc(r.nameHi||"")+'</p><p class="saved-ai-intro">'+esc(intro.en)+(intro.hi?'<span class="ai-recipe-hi-line" lang="hi">'+esc(intro.hi)+"</span>":"")+'</p><div class="recipe-meta saved-ai-meta"><span>◷ '+esc(r.prepTime||0)+' + '+esc(r.cookTime||0)+' '+(language==="hi"?"मिनट":"min")+'</span><span>♙ '+esc(r.servings||2)+' '+(language==="hi"?"लोग":"servings")+'</span></div><div class="saved-card-actions"><button type="button" class="recipe-open" data-ai-toggle="'+i+'" aria-expanded="false" aria-controls="'+detailId+'">'+(language==="hi"?"रेसिपी खोलें":"View recipe")+' ↗</button><button type="button" class="saved-remove" data-ai-remove="'+i+'">'+(language==="hi"?"हटाएँ":"Remove")+'</button></div><div class="saved-ai-detail" id="'+detailId+'" hidden><h4>'+(language==="hi"?"सामग्री":"Ingredients")+'</h4><ul>'+ing+'</ul><h4>'+(language==="hi"?"बनाने का तरीका":"Steps")+'</h4><ol>'+steps+'</ol>'+(r.tip||r.tipHi?'<h4>'+(language==="hi"?"कुक की सलाह":"Cook’s tip")+'</h4><p>'+esc(r.tip||"")+(r.tipHi?'<span class="ai-recipe-hi-line" lang="hi">'+esc(r.tipHi)+"</span>":"")+"</p>":"")+"</div></div></article>";
 }
 function render(){
+ if(accountReady&&!accountUser){count.textContent=language==="hi"?"लॉगिन ज़रूरी है":"Login required";grid.hidden=true;empty.hidden=true;return;}
  const ids=readSaved(),items=ids.filter(id=>recipes[id]).map(id=>({id,...recipes[id]})),aiItems=readAiSaved();
  const total=items.length+aiItems.length;
  count.textContent=language==="hi"?total+" रेसिपी":total+" "+(total===1?"recipe":"recipes");
@@ -31,7 +32,7 @@ function setLanguage(next){language=next;document.body.classList.toggle("lang-hi
 $("#languageToggle").addEventListener("click",()=>setLanguage(language==="en"?"hi":"en"));
 grid.addEventListener("click",e=>{
  const remove=e.target.closest("[data-remove]");
- if(remove){const id=remove.dataset.remove;writeSaved(readSaved().filter(x=>x!==id));render();note(language==="hi"?"रेसिपी सेव की गई सूची से हटा दी गई":"Recipe removed from saved list");return}
+ if(remove){const id=remove.dataset.remove;(async()=>{const auth=window.COOKIPIE_AUTH,session=auth?await auth.requireLogin():null;if(!session)return;try{await auth.setSaved(id,false);writeSaved(readSaved().filter(x=>x!==id));render();note(language==="hi"?"रेसिपी सेव की गई सूची से हटा दी गई":"Recipe removed from your account");}catch{note("Could not remove recipe. Please retry.");}})();return}
  const aiRemove=e.target.closest("[data-ai-remove]");
  if(aiRemove){const all=readAiSaved();all.splice(Number(aiRemove.dataset.aiRemove),1);writeAiSaved(all);render();note(language==="hi"?"निजी AI रेसिपी हटा दी गई":"Private AI recipe removed");return}
  const toggle=e.target.closest("[data-ai-toggle]");
@@ -39,4 +40,7 @@ grid.addEventListener("click",e=>{
 });
 window.addEventListener("storage",e=>{if(e.key==="cookipie-saved-v1"||e.key==="cookipie-ai-saved-v1")render()});
 $("#year").textContent=new Date().getFullYear();setLanguage(language);
+function initAccount(){const auth=window.COOKIPIE_AUTH;if(!auth)return;auth.ready.then(async()=>{accountReady=true;accountUser=await auth.getSession();if(!accountUser){let gate=$("#savedLoginGate");if(!gate){gate=document.createElement("p");gate.id="savedLoginGate";gate.className="login-required-note";gate.textContent="Please sign in with Google to view and sync your saved recipes. / सेव की गई रेसिपी देखने के लिए Google से लॉगिन करें।";grid.parentNode.insertBefore(gate,grid);}render();return;}accountUser=accountUser.user;try{const remote=await auth.getSaved(),ids=Array.isArray(remote.recipeIds)?remote.recipeIds:[],local=readSaved();for(const recipeId of local)if(!ids.includes(recipeId))await auth.setSaved(recipeId,true);writeSaved([...new Set([...ids,...local])]);}catch(error){note(error.message==="account_data_setup_required"?"Account features are being enabled":"Could not sync saved recipes");}const gate=$("#savedLoginGate");if(gate)gate.remove();render();});}
+initAccount();
+document.addEventListener("cookipie-auth-ready",initAccount,{once:true});
 })();
