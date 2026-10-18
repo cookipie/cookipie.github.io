@@ -6,6 +6,15 @@
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
-  }
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cookipie-reviews",
+      "database_id": "3dd00de4-7ca3-41f4-a678-3885e1420eab"
+    }
+  ]
 }
