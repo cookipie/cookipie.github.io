@@ -29,7 +29,7 @@ function mountReviews(){
  $("#reviewForm").addEventListener("submit",async event=>{
   event.preventDefault();const form=event.currentTarget,button=form.querySelector('button[type="submit"]'),message=$("#reviewFormMessage");
   button.disabled=true;message.textContent="Posting…";
-  try{const response=await fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"review",recipeId:id,name:$("#reviewerName").value,rating:Number($("#reviewRating").value),text:$("#reviewText").value})});const data=await response.json();if(!response.ok)throw new Error(data.error||"unavailable");form.reset();message.textContent="Thanks! Your review is published.";await loadReviews();}
+  try{const response=await fetch((location.hostname.endsWith("github.io")?"https://cookipie-github-io.uplakshapanwar.workers.dev/api/reviews":"/api/reviews"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"review",recipeId:id,name:$("#reviewerName").value,rating:Number($("#reviewRating").value),text:$("#reviewText").value})});const data=await response.json();if(!response.ok)throw new Error(data.error||"unavailable");form.reset();message.textContent="Thanks! Your review is published.";await loadReviews();}
   catch(error){message.textContent=error.message==="reviews_setup_required"?"Reviews are being set up. Please try again later.":"Could not post the review. Please try again later.";}
   finally{button.disabled=false;}
  });
@@ -51,7 +51,7 @@ async function loadReviews(){
   }).join("");
   list.querySelectorAll(".comment-form").forEach(form=>form.addEventListener("submit",async event=>{
    event.preventDefault();const button=form.querySelector("button"),msg=form.querySelector(".comment-message");button.disabled=true;msg.textContent="Posting…";
-   try{const response=await fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"comment",recipeId:id,reviewId:form.dataset.reviewId,name:form.elements.name.value,text:form.elements.text.value})});const result=await response.json();if(!response.ok)throw new Error(result.error||"unavailable");await loadReviews();}
+   try{const response=await fetch((location.hostname.endsWith("github.io")?"https://cookipie-github-io.uplakshapanwar.workers.dev/api/reviews":"/api/reviews"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"comment",recipeId:id,reviewId:form.dataset.reviewId,name:form.elements.name.value,text:form.elements.text.value})});const result=await response.json();if(!response.ok)throw new Error(result.error||"unavailable");await loadReviews();}
    catch{msg.textContent="Could not post comment. Please try again.";}finally{button.disabled=false;}
   }));
  }catch{summary.textContent="Reviews are temporarily unavailable.";list.innerHTML='<div class="reviews-empty"><p>Reviews are being set up. Please check back soon.</p></div>';}
