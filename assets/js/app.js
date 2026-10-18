@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const authScript=document.createElement("script");
-  authScript.src="assets/js/auth.js?v=2";
+  authScript.src="assets/js/auth.js?v=3";
   document.head.appendChild(authScript);
   let recipes = Object.entries(window.COOKIPIE_RECIPES || {}).map(([id,r]) => ({id,...r}));
   const $ = (s, root=document) => root.querySelector(s);
