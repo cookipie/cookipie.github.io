@@ -2,7 +2,7 @@
 "use strict";
 let recipes=window.COOKIPIE_RECIPES||{};
 const id=new URLSearchParams(location.search).get("id");
-const r=recipes[id];
+let r=recipes[id];
 const $=(s,root=document)=>root.querySelector(s);
 const $$=(s,root=document)=>[...root.querySelectorAll(s)];
 const toast=$("#toast");let timer;
