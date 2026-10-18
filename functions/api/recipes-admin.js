@@ -2,7 +2,7 @@ const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:
 const clean=(v,max)=>typeof v==="string"?v.trim().slice(0,max):"";
 const SUPABASE_URL="https://htnziffczbgmaikzfiov.supabase.co";
 const SUPABASE_KEY="sb_publishable_sIFiT_rsIK2Eqa_RzkOvpQ_5RqTz5X0";
-async function getUser(request){const token=(request.headers.get("Authorization")||"").match(/^Bearer\\s+(.+)$/i)?.[1];if(!token)return null;try{const r=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+token}});if(!r.ok)return null;return await r.json()}catch{return null}}
+async function getUser(request){const token=(request.headers.get("Authorization")||"").match(/^Bearer\s+(.+)$/i)?.[1];if(!token)return null;try{const r=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+token}});if(!r.ok)return null;return await r.json()}catch{return null}}
 function admin(user,env){const allowed=String(env.COOKIPIE_ADMIN_EMAILS||"").split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);return !!user?.email&&allowed.includes(user.email.toLowerCase())}
 function parse(row){return {...row,introHi:row.intro_hi||"",groups:JSON.parse(row.groups_json||"[]"),ingredients:JSON.parse(row.ingredients_json||"[]"),steps:JSON.parse(row.steps_json||"[]"),tip:JSON.parse(row.tip_json||"[]")}}
 const fields=["id","name","hi","kind","time","servings","groups_json","tags","image","alt","intro","intro_hi","ingredients_json","steps_json","tip_json","difficulty"];
