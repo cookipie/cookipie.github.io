@@ -1,10 +1,15 @@
 import { onRequestPost } from "./functions/api/ai-cook.js";
 import { onRequest as onReviewsRequest } from "./functions/api/reviews.js";
 import { onRequest as onAccountDataRequest } from "./functions/api/account-data.js";
+import { onRequest as onRecipesAdminRequest } from "./functions/api/recipes-admin.js";
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/recipes-admin") {
+      return onRecipesAdminRequest({ request, env, ctx });
+    }
 
     if (url.pathname === "/api/account-data") {
       return onAccountDataRequest({ request, env, ctx });
