@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
+  "name": "cookipie-github-io",
+  "main": "./worker.js",
+  "compatibility_date": "2026-10-18",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  }
+}
