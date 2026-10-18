@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const recipes=window.COOKIPIE_RECIPES||{};
+let recipes=window.COOKIPIE_RECIPES||{};
 const id=new URLSearchParams(location.search).get("id");
 const r=recipes[id];
 const $=(s,root=document)=>root.querySelector(s);
@@ -61,6 +61,16 @@ $("#languageToggle")?.addEventListener("click",()=>setLanguage(!document.body.cl
 $("#year").textContent=new Date().getFullYear();
 render();
 mountReviews();
+(async()=>{
+  try{
+    const base=location.hostname.endsWith("github.io")?"https://cookipie-github-io.uplakshapanwar.workers.dev":"";
+    const response=await fetch(base+"/api/recipes-admin",{cache:"no-store"});
+    if(!response.ok)return;
+    const data=await response.json();
+    for(const item of (data.recipes||[])){recipes[item.id]=({...item,introHi:item.introHi||item.intro_hi||""});}
+    if(recipes[id]){r=recipes[id];render();mountReviews();}
+  }catch(error){console.warn("Cookipie public recipes could not load",error?.message||"Error");}
+})();
 window.COOKIPIE_AUTH?.ready?.then(async()=>{const auth=window.COOKIPIE_AUTH,session=await auth.getSession();if(!session)return;try{const remote=await auth.getSaved(),ids=Array.isArray(remote.recipeIds)?remote.recipeIds:[],local=saved();for(const recipeId of local)if(!ids.includes(recipeId))await auth.setSaved(recipeId,true);const all=[...new Set([...ids,...local])];localStorage.setItem("cookipie-saved-v1",JSON.stringify(all));const button=$("#detailSave");if(button){const yes=all.includes(id);button.setAttribute("aria-pressed",String(yes));button.textContent=document.body.classList.contains("lang-hi")?(yes?"♥ सेव किया गया":"♡ रेसिपी सेव करें"):(yes?"♥ Saved":"♡ Save recipe");}const likes=await auth.getRecipeLikes(id);$("#detailLikeCount").textContent=likes.count;$("#detailLike").setAttribute("aria-pressed",String(likes.liked));}catch(error){console.warn("Cookipie account sync failed",error?.message||"Error")}});
 let savedLanguage="en";try{savedLanguage=localStorage.getItem("cookipie-language-v1")==="hi"?"hi":"en"}catch{}setLanguage(savedLanguage==="hi");
 })();
