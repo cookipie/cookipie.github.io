@@ -33,10 +33,10 @@ export async function onRequestPost(context) {
       return json({error, upstreamStatus:upstream.status},502);
     }
     const text=payload?.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("").trim();
-    if(!text) return json({error:"No recipe was returned."},502);
+    if(!text) return json({error:"gemini_empty_response"},502);
     let recipe;
-    try { recipe=JSON.parse(text.replace(/^\x60\x60\x60(?:json)?\s*/i,"").replace(/\s*\x60\x60\x60$/,"")); } catch { return json({error:"The AI response was not valid recipe data."},502); }
-    if(typeof recipe.name!=="string"||!Array.isArray(recipe.ingredients)||!Array.isArray(recipe.steps)) return json({error:"The AI response was incomplete."},502);
+    try { recipe=JSON.parse(text.replace(/^\x60\x60\x60(?:json)?\s*/i,"").replace(/\s*\x60\x60\x60$/,"")); } catch { console.error("Cookipie Gemini response was not valid JSON"); return json({error:"gemini_invalid_json"},502); }
+    if(typeof recipe.name!=="string"||!Array.isArray(recipe.ingredients)||!Array.isArray(recipe.steps)) { console.error("Cookipie Gemini response missing recipe fields"); return json({error:"gemini_incomplete"},502); }
     return json({recipe});
-  } catch { return json({error:"AI service is temporarily unavailable."},502); }
+  } catch (err) { console.error("Cookipie Gemini fetch failed", {name:err?.name||"Error"}); return json({error:"gemini_network"},502); }
 }
