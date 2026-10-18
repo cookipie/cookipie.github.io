@@ -32,7 +32,8 @@
   }
   function renderSaved(){
     const items=readSaved();savedArea.hidden=items.length===0;
-    savedList.innerHTML=items.length?'<div class="ai-saved-list">'+items.map((x,i)=>'<div class="ai-saved-item"><div><strong>'+esc(x.name)+'</strong><small lang="hi">'+esc(x.nameHi||"")+'</small></div><button type="button" data-ai-remove="'+i+'">'+t("remove")+'</button></div>').join("")+'</div>':'<p>'+t("empty")+'</p>';
+    savedList.innerHTML=items.length?'<div class="ai-saved-list">'+items.map((x,i)=>'<div class="ai-saved-item"><div class="ai-saved-name"><button type="button" class="ai-open-saved" data-ai-open="'+i+'"><strong>'+esc(x.name)+'</strong><small lang="hi">'+esc(x.nameHi||"")+'</small></button></div><button type="button" data-ai-remove="'+i+'">'+t("remove")+'</button></div>').join("")+'</div>':'<p>'+t("empty")+'</p>';
+    savedList.querySelectorAll("[data-ai-open]").forEach(b=>b.addEventListener("click",()=>{const recipe=readSaved()[Number(b.dataset.aiOpen)];if(recipe){currentRecipe=recipe;renderRecipe(recipe);result.scrollIntoView({behavior:"smooth",block:"start"})}}));
     savedList.querySelectorAll("[data-ai-remove]").forEach(b=>b.addEventListener("click",()=>{const all=readSaved();all.splice(Number(b.dataset.aiRemove),1);writeSaved(all);renderSaved()}));
   }
   form.addEventListener("submit",async e=>{
