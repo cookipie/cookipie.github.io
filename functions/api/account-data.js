@@ -62,7 +62,6 @@ export async function onRequest(context) {
   if (!(request.headers.get("content-type") || "").includes("application/json")) return json({ error: "json_required" }, 415);
   let body; try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
   const action = body?.action, recipeId = clean(body?.recipeId, 80);
-  if (!validRecipe(recipeId)) return json({ error: "invalid_recipe" }, 400);
   try {
     if (action === "save-ai") {
       const recipe = body?.recipe;
@@ -79,6 +78,7 @@ export async function onRequest(context) {
       await env.DB.prepare("DELETE FROM saved_ai_recipes WHERE user_id = ? AND recipe_id = ?").bind(user.id, aiId).run();
       return json({ ok: true, saved: false });
     }
+    if (!validRecipe(recipeId)) return json({ error: "invalid_recipe" }, 400);
     if (action === "save") {
       await env.DB.prepare("INSERT OR IGNORE INTO saved_recipes (user_id, recipe_id) VALUES (?, ?)").bind(user.id, recipeId).run();
       return json({ ok: true, saved: true });
