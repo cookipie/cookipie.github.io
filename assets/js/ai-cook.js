@@ -55,5 +55,17 @@
   });
   function syncLanguage(){language=document.documentElement.lang==="hi"?"hi":"en";renderSaved();if(currentRecipe&& !result.hidden)renderRecipe(currentRecipe)}
   new MutationObserver(syncLanguage).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+  async function syncAccountSaved(){
+    const auth=window.COOKIPIE_AUTH;if(!auth)return;
+    await auth.ready;const session=await auth.getSession();if(!session)return;
+    try{
+      const response=await auth.api("/api/account-data?action=list-ai-saved"),remote=Array.isArray(response.recipes)?response.recipes:[],local=readSaved();
+      for(const recipe of local){if(recipe.id&&!remote.some(item=>item.id===recipe.id))await auth.api("/api/account-data",{method:"POST",body:JSON.stringify({action:"save-ai",recipe})});}
+      const merged=[...local];for(const recipe of remote){if(recipe.id&&!merged.some(item=>item.id===recipe.id))merged.push(recipe);}
+      writeSaved(merged);renderSaved();
+    }catch(error){console.warn("Cookipie private AI recipes could not sync",error?.message||"Error");}
+  }
   renderSaved();syncLanguage();
+  window.COOKIPIE_AUTH?.ready?.then(syncAccountSaved);
+  document.addEventListener("cookipie-auth-ready",syncAccountSaved,{once:true});
 })();
