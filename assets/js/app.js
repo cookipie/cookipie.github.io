@@ -17,7 +17,7 @@
   function card(r){
     const level=r.difficulty||"easy";
     const levelLabel=language==="hi"?({easy:"आसान",medium:"मध्यम",hard:"कठिन"}[level]||"आसान"):({easy:"EASY",medium:"MEDIUM",hard:"HARD"}[level]||"EASY");
-    return `<article class="recipe-card"><div class="recipe-image-wrap"><img src="${r.image}" alt="${r.alt}" loading="lazy" onerror="this.style.opacity='.15';this.alt='Recipe photo unavailable'"><span class="diet-badge ${r.kind==="nonveg"?"nonveg":""}"><i class="diet-dot"></i>${r.kind==="veg"?(language==="hi"?"शाकाहारी":"VEG"):(language==="hi"?"मांसाहारी":"NON-VEG")}</span><button class="save-recipe ${saved.includes(r.id)?"saved":""}" data-save="${r.id}" aria-label="${saved.includes(r.id)?"Remove saved recipe":"Save recipe"}" aria-pressed="${saved.includes(r.id)}">${saved.includes(r.id)?"♥":"♡"}</button></div><div class="recipe-body"><div class="recipe-meta"><span>◷ ${r.time} ${language==="hi"?"मिनट":"min"}</span><span class="meta-separator">•</span><span>${levelLabel}</span></div><h3 class="recipe-title">${r.name}</h3><p class="recipe-title-hi">${r.hi}</p><div class="recipe-bottom"><span class="recipe-time">${language==="hi"?"शुरुआती संग्रह":"Featured recipe"}</span><a class="recipe-open" href="recipe.html?id=${encodeURIComponent(r.id)}">${language==="hi"?"रेसिपी देखें":"View recipe"} ↗</a></div><button class="outline-button recipe-like-button" data-like="${r.id}" aria-pressed="${!!recipeLikes[r.id]?.liked}">♥ <span>${language==="hi"?"पसंद":"Like"}</span> <span class="like-count">${Number(recipeLikes[r.id]?.count||0)}</span></button></div></article>`;
+    return `<article class="recipe-card"><div class="recipe-image-wrap"><img src="${r.image}" alt="${r.alt}" loading="lazy" onerror="this.style.opacity='.15';this.alt='Recipe photo unavailable'"><span class="diet-badge ${r.kind==="nonveg"?"nonveg":""}"><i class="diet-dot"></i>${r.kind==="veg"?(language==="hi"?"शाकाहारी":"VEG"):(language==="hi"?"मांसाहारी":"NON-VEG")}</span><button class="save-recipe ${saved.includes(r.id)?"saved":""}" data-save="${r.id}" aria-label="${saved.includes(r.id)?"Remove saved recipe":"Save recipe"}" aria-pressed="${saved.includes(r.id)}">${saved.includes(r.id)?"♥":"♡"}</button></div><div class="recipe-body"><div class="recipe-meta"><span>◷ ${r.time} ${language==="hi"?"मिनट":"min"}</span><span class="meta-separator">•</span><span>${levelLabel}</span></div><h3 class="recipe-title">${r.name}</h3><p class="recipe-title-hi">${r.hi}</p><div class="recipe-bottom"><span class="recipe-time">${language==="hi"?"शुरुआती संग्रह":"Featured recipe"}</span><a class="recipe-open" href="recipe.html?id=${encodeURIComponent(r.id)}">${language==="hi"?"रेसिपी देखें":"View recipe"} ↗</a></div><button class="outline-button recipe-like-button" data-like="${r.id}" aria-pressed="${!!recipeLikes[r.id]?.liked}">♥ <span>${language==="hi"?"पसंद":"Like"}</span> <span class="like-count">${Number(recipeLikes[r.id]?.count||0)}</span></button><button class="outline-button recipe-share-button" data-share="${r.id}">${language==="hi"?"↗ शेयर करें":"↗ Share recipe"}</button></div></article>`;
   }
   function render(){
     let list=recipes.filter(r=>{
@@ -57,6 +57,18 @@
   $("#clearSearch").addEventListener("click",resetFilters);
   $("#languageToggle").addEventListener("click",()=>setLanguage(language==="en"?"hi":"en"));
   grid.addEventListener("click",async e=>{
+    const share=e.target.closest("[data-share]");
+    if(share){
+      const recipe=recipes.find(item=>item.id===share.dataset.share);
+      if(!recipe)return;
+      const url=new URL("recipe.html?id="+encodeURIComponent(recipe.id),location.href).href;
+      try{
+        if(navigator.share){await navigator.share({title:recipe.name+" — Cookipie",text:recipe.name+" / "+(recipe.hi||""),url});}
+        else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);showToast(language==="hi"?"रेसिपी लिंक कॉपी हो गया":"Recipe link copied");}
+        else{showToast(language==="hi"?"रेसिपी खोलकर उसका लिंक शेयर करें":"Open the recipe to copy or share its link");}
+      }catch(error){if(error.name!=="AbortError")showToast(language==="hi"?"रेसिपी लिंक शेयर नहीं हो सका":"Could not share the recipe link");}
+      return;
+    }
     const save=e.target.closest("[data-save]");
     if(save){
       const auth=window.COOKIPIE_AUTH, session=auth?await auth.requireLogin():null;
