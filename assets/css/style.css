@@ -100,3 +100,5 @@
 /* Recipe card actions: keep Like and Share aligned on small screens. */
 .recipe-card-actions{display:flex;gap:8px;margin-top:8px}.recipe-card-actions .outline-button{flex:1;min-width:0;padding:9px 10px;white-space:nowrap}.recipe-share-button{display:inline-flex;align-items:center;justify-content:center;gap:5px}
 @media(max-width:420px){.recipe-card-actions{gap:6px}.recipe-card-actions .outline-button{padding:8px 6px;font-size:11px}}
+
+.ai-recipe-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
