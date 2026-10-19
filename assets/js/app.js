@@ -105,7 +105,7 @@
       const response=await fetch(base+"/api/recipes-admin",{cache:"no-store"});
       if(!response.ok)return;
       const data=await response.json();
-      const custom=(data.recipes||[]).map(r=>({...r,introHi:r.introHi||r.intro_hi||""}));
+      const custom=(data.recipes||[]).map(r=>{const baseRecipe=window.COOKIPIE_RECIPES?.[r.id]||{};return {...r,image:r.image||baseRecipe.image||"",alt:r.alt||baseRecipe.alt||r.name,introHi:r.introHi||r.intro_hi||""};});
       const ids=new Set(custom.map(r=>r.id));
       recipes=[...recipes.filter(r=>!ids.has(r.id)),...custom];
       render();
