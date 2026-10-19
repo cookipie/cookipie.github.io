@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173f32">
+<meta name="description" content="Contact Cookipie for questions, feedback or help with the recipe website.">
+<title>Contact Cookipie — Cookipie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=10">
+<style>.info-page{max-width:850px;margin:42px auto 72px;padding:0 22px}.info-page h1{font:700 clamp(2rem,5vw,3.4rem) 'Playfair Display',serif;color:#173f32}.info-page h2{margin-top:30px;color:#173f32;font-size:1.25rem}.info-page p,.info-page li{line-height:1.8;color:#4e5b53}.info-page .updated{font-size:.9rem;color:#68756c}.info-page .content-card{background:#fff;border:1px solid #e4e7df;border-radius:18px;padding:clamp(18px,4vw,32px)}.info-page a{color:#17664b}.info-nav{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.info-nav a{padding:9px 13px;border:1px solid #dce3da;border-radius:24px;text-decoration:none}.language-toggle{cursor:pointer}</style>
+</head>
+<body>
+<header class="site-header"><div class="header-inner"><a class="brand" href="./" aria-label="Cookipie home"><span class="brand-mark">c</span><span>cookipie</span></a><div class="header-actions"><button class="language-toggle" id="languageToggle" type="button">हि <span class="toggle-divider">/</span> EN</button></div></div></header>
+<main class="info-page">
+<a href="./" data-en="← Back to Cookipie" data-hi="← कूकिपाई पर वापस जाएँ">← Back to Cookipie</a>
+<h1 data-en="Contact Cookipie" data-hi="कूकिपाई से संपर्क करें">Contact Cookipie</h1>
+<p class="updated">Cookipie · <span data-en="Last updated: 19 October 2026" data-hi="अंतिम अपडेट: 19 अक्टूबर 2026">Last updated: 19 October 2026</span></p>
+<nav class="info-nav" aria-label="Site information"><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav>
+<section class="content-card">
+<h2 data-en="We’d like to hear from you" data-hi="हम आपकी बात सुनना चाहते हैं">We’d like to hear from you</h2>
+<p data-en="Have a question, noticed an issue, or want to share feedback about Cookipie? A public contact method has not been added yet. This page will be updated when the site owner provides one." data-hi="क्या आपका कोई सवाल है, कोई समस्या मिली है, या कूकिपाई के बारे में सुझाव देना चाहते हैं? अभी सार्वजनिक संपर्क माध्यम नहीं जोड़ा गया है। साइट मालिक के संपर्क विवरण देने पर यह पेज अपडेट किया जाएगा।">Have a question, noticed an issue, or want to share feedback about Cookipie? A public contact method has not been added yet. This page will be updated when the site owner provides one.</p>
+<p data-en="Please do not share passwords, payment details, or other sensitive personal information through public comments." data-hi="कृपया सार्वजनिक टिप्पणियों में पासवर्ड, भुगतान विवरण या अन्य संवेदनशील निजी जानकारी साझा न करें।">Please do not share passwords, payment details, or other sensitive personal information through public comments.</p>
+</section>
+</main>
+<footer class="site-footer"><div class="footer-bottom section-wrap"><span>© <span id="year"></span> Cookipie</span><span data-en="Made for curious home cooks ♡" data-hi="खाना बनाने के शौकीनों के लिए ♡">Made for curious home cooks ♡</span></div></footer>
+<script>
+(()=>{const key="cookipie-language-v1";let hi=false;try{hi=localStorage.getItem(key)==="hi"}catch{}function setLanguage(next){hi=next;try{localStorage.setItem(key,hi?"hi":"en")}catch{}document.documentElement.lang=hi?"hi":"en";document.body.classList.toggle("lang-hi",hi);document.querySelectorAll("[data-en][data-hi]").forEach(el=>el.innerHTML=hi?el.dataset.hi:el.dataset.en);const b=document.querySelector("#languageToggle");b.innerHTML=hi?"<strong>हि</strong> <span class='toggle-divider'>/</span> EN":"हि <span class='toggle-divider'>/</span> <strong>EN</strong>";b.setAttribute("aria-label",hi?"Switch to English":"Switch to Hindi")}document.querySelector("#languageToggle").addEventListener("click",()=>setLanguage(!hi));setLanguage(hi);document.querySelector("#year").textContent=new Date().getFullYear()})();
+</script>
+</body>
+</html>
