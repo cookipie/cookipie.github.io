@@ -22,9 +22,19 @@
     const ingredientsHtml=r.ingredients.map(x=>{x=pair(x);return '<li>'+esc(x.en)+'<span class="ai-recipe-hi-line" lang="hi">'+esc(x.hi)+'</span></li>'}).join("");
     const stepsHtml=r.steps.map(x=>{x=pair(x);return '<li>'+esc(x.en)+'<span class="ai-recipe-hi-line" lang="hi">'+esc(x.hi)+'</span></li>'}).join("");
     const intro=pair({en:r.intro||"",hi:r.introHi||""}),tip=pair({en:r.tip||"",hi:r.tipHi||""});
-    result.innerHTML='<h3>'+esc(r.name)+'</h3><p class="ai-recipe-hi" lang="hi">'+esc(r.nameHi||"")+'</p><p class="ai-recipe-intro">'+esc(intro.en)+'<span class="ai-recipe-hi-line" lang="hi">'+esc(intro.hi)+'</span></p><div class="ai-recipe-meta"><span>◷ '+esc(r.prepTime||0)+' '+t("mins")+' '+(language==="hi"?"तैयारी":"prep")+'</span><span>♨ '+esc(r.cookTime||0)+' '+t("mins")+' '+(language==="hi"?"पकाने":"cook")+'</span><span>♙ '+esc(r.servings||2)+' '+t("serves")+'</span></div><h4>'+t("ingredients")+'</h4><ul>'+ingredientsHtml+'</ul><h4>'+t("steps")+'</h4><ol>'+stepsHtml+'</ol>'+(tip.en||tip.hi?'<h4>'+t("tip")+'</h4><p>'+esc(tip.en)+'<span class="ai-recipe-hi-line" lang="hi">'+esc(tip.hi)+'</span></p>':"")+'<button class="ai-save-result" id="aiSaveResult" type="button">'+t("save")+'</button>';
+    result.innerHTML='<h3>'+esc(r.name)+'</h3><p class="ai-recipe-hi" lang="hi">'+esc(r.nameHi||"")+'</p><p class="ai-recipe-intro">'+esc(intro.en)+'<span class="ai-recipe-hi-line" lang="hi">'+esc(intro.hi)+'</span></p><div class="ai-recipe-meta"><span>◷ '+esc(r.prepTime||0)+' '+t("mins")+' '+(language==="hi"?"तैयारी":"prep")+'</span><span>♨ '+esc(r.cookTime||0)+' '+t("mins")+' '+(language==="hi"?"पकाने":"cook")+'</span><span>♙ '+esc(r.servings||2)+' '+t("serves")+'</span></div><h4>'+t("ingredients")+'</h4><ul>'+ingredientsHtml+'</ul><h4>'+t("steps")+'</h4><ol>'+stepsHtml+'</ol>'+(tip.en||tip.hi?'<h4>'+t("tip")+'</h4><p>'+esc(tip.en)+'<span class="ai-recipe-hi-line" lang="hi">'+esc(tip.hi)+'</span></p>':"")+'<div class="ai-recipe-actions"><button class="ai-save-result" id="aiSaveResult" type="button">'+t("save")+'</button><button class="ai-save-result" id="aiShareResult" type="button">'+(language==="hi"?"↗ रेसिपी शेयर करें":"↗ Share recipe")+'</button></div>';
     result.hidden=false;
-    $("#aiSaveResult").addEventListener("click",()=>saveRecipe(r));
+    $("#aiSaveResult").addEventListener("click",()=>saveRecipe(r));$("#aiShareResult").addEventListener("click",()=>shareRecipe(r));
+  }
+  async function shareRecipe(r){
+    const pairText=v=>{const p=pair(v);return [p.en,p.hi].filter(Boolean).join(" / ")};
+    const ingredients=(r.ingredients||[]).map((x,i)=>(i+1)+". "+pairText(x)).join("\n");
+    const steps=(r.steps||[]).map((x,i)=>(i+1)+". "+pairText(x)).join("\n");
+    const intro=pairText({en:r.intro||"",hi:r.introHi||""});
+    const tip=pairText({en:r.tip||"",hi:r.tipHi||""});
+    const url=location.origin+location.pathname+"#ai-cook";
+    const text=[r.name,r.nameHi||"",intro,"\nIngredients / सामग्री:\n"+ingredients,"\nSteps / विधि:\n"+steps,tip?"\nCook’s tip / सुझाव:\n"+tip:"","\nMade with Cookipie: "+url].filter(Boolean).join("\n");
+    try{if(navigator.share){await navigator.share({title:r.name+" — Cookipie",text,url});}else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);status.textContent=language==="hi"?"रेसिपी की जानकारी कॉपी हो गई।":"Recipe details copied to clipboard.";}else status.textContent=language==="hi"?"इस रेसिपी को शेयर करने के लिए टेक्स्ट कॉपी करें।":"Copy the recipe text to share it.";}catch(error){if(error.name!=="AbortError")status.textContent=language==="hi"?"रेसिपी शेयर नहीं हो सकी।":"Could not share this recipe."}
   }
   async function saveRecipe(r){
     const auth=window.COOKIPIE_AUTH,session=auth?await auth.requireLogin():null;if(!session){status.textContent=language==="hi"?"AI रेसिपी सेव करने के लिए पहले लॉगिन करें।":"Please sign in with Google to save AI recipes.";return;}
