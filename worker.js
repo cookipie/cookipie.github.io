@@ -25,13 +25,28 @@ export default {
     }
 
     if (url.pathname === "/api/ai-cook") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "https://cookipie.github.io",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400",
+            "Vary": "Origin"
+          }
+        });
+      }
       if (request.method !== "POST") {
         return new Response(JSON.stringify({ error: "method_not_allowed" }), {
           status: 405,
           headers: {
             "Content-Type": "application/json; charset=utf-8",
             "Cache-Control": "no-store",
-            "Allow": "POST"
+            "Access-Control-Allow-Origin": "https://cookipie.github.io",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Allow": "POST, OPTIONS"
           }
         });
       }
