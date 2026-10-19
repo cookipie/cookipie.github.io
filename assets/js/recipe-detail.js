@@ -75,7 +75,7 @@ mountReviews();
     const response=await fetch(base+"/api/recipes-admin",{cache:"no-store"});
     if(!response.ok)return;
     const data=await response.json();
-    for(const item of (data.recipes||[])){const total=Math.max(1,Number(item.time)||30);const prepTime=Math.max(5,Math.round(total*0.25));recipes[item.id]=({...item,introHi:item.introHi||item.intro_hi||"",prepTime:Number.isFinite(Number(item.prepTime))?Number(item.prepTime):prepTime,cookTime:Number.isFinite(Number(item.cookTime))?Number(item.cookTime):Math.max(5,total-prepTime),difficulty:item.difficulty||"easy",related:Array.isArray(item.related)?item.related:[]});}
+    for(const item of (data.recipes||[])){const total=Math.max(1,Number(item.time)||30);const prepTime=Math.max(5,Math.round(total*0.25));recipes[item.id]=({...item,image:item.image||recipes[item.id]?.image||"",alt:item.alt||recipes[item.id]?.alt||item.name,introHi:item.introHi||item.intro_hi||"",prepTime:Number.isFinite(Number(item.prepTime))?Number(item.prepTime):prepTime,cookTime:Number.isFinite(Number(item.cookTime))?Number(item.cookTime):Math.max(5,total-prepTime),difficulty:item.difficulty||"easy",related:Array.isArray(item.related)?item.related:[]});}
     if(recipes[id]){r=recipes[id];render();mountReviews();}
   }catch(error){console.warn("Cookipie public recipes could not load",error?.message||"Error");}
 })();
