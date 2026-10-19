@@ -1,6 +1,8 @@
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const json = (body, status=200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type":"application/json; charset=utf-8", "Cache-Control":"no-store", "X-Content-Type-Options":"nosniff" } });
+  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
+  const corsHeaders = { "Access-Control-Allow-Origin":"https://cookipie.github.io", "Access-Control-Allow-Methods":"POST, OPTIONS", "Access-Control-Allow-Headers":"Content-Type", "Access-Control-Max-Age":"86400", "Vary":"Origin" };
+const json = (body, status=200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type":"application/json; charset=utf-8", "Cache-Control":"no-store", "X-Content-Type-Options":"nosniff" } });
   if (!env.GEMINI_API_KEY) return json({ error:"setup_required" }, 503);
   const contentType=request.headers.get("content-type")||"";
   if (!contentType.includes("application/json")) return json({error:"Send JSON only."},415);
