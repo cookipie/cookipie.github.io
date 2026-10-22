@@ -24,7 +24,7 @@ for (const id of ids) {
   html = html.replace(/<meta property="og:description"[^>]*>/g, "");
   html = html.replace("</head>", '<link rel="canonical" href="https://cookipie.github.io/recipes/' + id + '.html"><meta property="og:type" content="article"><meta property="og:title" content="' + escapeHtml(title) + '"><meta property="og:description" content="' + escapeHtml(description) + '"></head>');
   html = html.replace(/<body data-recipe-id="[^"]*">/, '<body data-recipe-id="' + id + '">');
-  html = html.replace(/recipe-detail\.js\?v=\d+/, "recipe-detail.js?v=22");
+  html = html.replace(/recipe-detail\.js\?v=\d+/, "recipe-detail.js?v=23");
   fs.writeFileSync(path.join(root, "recipes", id + ".html"), html);
 }
 
