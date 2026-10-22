@@ -102,3 +102,7 @@
 @media(max-width:420px){.recipe-card-actions{gap:6px}.recipe-card-actions .outline-button{padding:8px 6px;font-size:11px}}
 
 .ai-recipe-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+
+/* Attribution for reusable recipe photography. */
+.image-credit{font-size:11px;line-height:1.5;color:var(--muted,#68766d);margin:10px 0 0;overflow-wrap:anywhere}.image-credit a{color:var(--green,#173f32);text-decoration:underline;text-underline-offset:2px}
