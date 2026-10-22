@@ -13,14 +13,14 @@ kheer:{prepTime:5,cookTime:35,difficulty:"easy",related:["poha","aloo-paratha","
 };
 
 const imageOverrides={
-poha:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Poha,_at_home,_Uttar_Pradesh.jpg",
-paneer:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Paneer_Butter_Masala.jpg",
-"masala-dosa":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Masala_Dosa,_South_Indian_Food.jpg",
-chole:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Chana-masala.jpg",
-biryani:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Chicken-biryani-recipe.jpg",
-pakora:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Onion_pakoda.JPG",
-kheer:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Kheer_or_rice_pudding.jpg",
-"aloo-paratha":"https://commons.wikimedia.org/wiki/Special:Redirect/file/ALOO_PARATHA.jpg"
+poha:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Kanda_poha.jpg?width=1200",
+paneer:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Paneer_Butter_Masala.jpg?width=1200",
+"masala-dosa":"https://commons.wikimedia.org/wiki/Special:Redirect/file/MasalaDosa.jpg?width=1200",
+chole:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Chickpea_Curry_-_Kolkata_2011-03-05_1910.JPG?width=1200",
+biryani:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Chicken-biryani-recipe.jpg?width=1200",
+pakora:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Onion_Pakora_01.jpg?width=1200",
+kheer:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Shahi_Rice_Kheer.jpg?width=1200",
+"aloo-paratha":"https://commons.wikimedia.org/wiki/Special:Redirect/file/ALOO_PARATHA.jpg?width=1200"
 };
 
 Object.keys(imageOverrides).forEach(id=>{
