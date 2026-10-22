@@ -6,106 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://cookipie.github.io/recipe.html?id=poha</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=paneer</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=shahi-paneer</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=masala-dosa</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=chole</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=biryani</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=pakora</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=kheer</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=aloo-paratha</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=dal-tadka</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=aloo-gobi</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=rajma</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=kadhi-pakora</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=veg-pulao</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=jeera-rice</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=matar-paneer</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=palak-paneer</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=besan-chilla</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=idli-sambar</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipe.html?id=upma</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://cookipie.github.io/image-credits.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -251,42 +151,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://cookipie.github.io/recipes/poha.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/paneer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/chole.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/biryani.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/pakora.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/kheer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/shahi-paneer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/masala-dosa.html</loc>
+    <loc>https://cookipie.github.io/recipes/aloo-gobi.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -296,42 +161,22 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://cookipie.github.io/recipes/aloo-gobi.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/rajma.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/kadhi-pakora.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/veg-pulao.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/jeera-rice.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/matar-paneer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://cookipie.github.io/recipes/palak-paneer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://cookipie.github.io/recipes/besan-chilla.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/biryani.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/chole.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/dal-tadka.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -341,12 +186,67 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://cookipie.github.io/recipes/jeera-rice.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/kadhi-pakora.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/kheer.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/masala-dosa.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/matar-paneer.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/pakora.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/palak-paneer.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/paneer.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/poha.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/rajma.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cookipie.github.io/recipes/shahi-paneer.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://cookipie.github.io/recipes/upma.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://cookipie.github.io/recipes/dal-tadka.html</loc>
+    <loc>https://cookipie.github.io/recipes/veg-pulao.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
